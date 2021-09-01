@@ -1,10 +1,8 @@
 package com.learning;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
-import java.util.Set;
 
 class UserInput {
     private int[] inputCheeseBlocks;
@@ -48,19 +46,27 @@ public class CheeseBlockWeight {
     }
 
     private static void processResult(UserInput userInput) {
-        int result = 0, lastEat = 0;
-        Set<Integer> processCheese = new HashSet<>();
-        for (int cheeseBlock : userInput.getInputCheeseBlocks()) {
-            if (!processCheese.contains(cheeseBlock)) {
-                if (lastEat < cheeseBlock) {
-                    lastEat = cheeseBlock - lastEat;
-                } else {
-                    lastEat = cheeseBlock;
+        int[] inputCheeseBlocks = userInput.getInputCheeseBlocks();
+        int finalResult = 0;
+        int tempResult;
+        if (inputCheeseBlocks.length > 1) {
+            for (int i = 0; i < 2; i++) {
+                tempResult = inputCheeseBlocks[i];
+                for (int j = i + 2; j < inputCheeseBlocks.length; j++) {
+                    tempResult += inputCheeseBlocks[j];
+                    int tempMax = 0;
+                    for (int k = j + 2; k < inputCheeseBlocks.length; k++) {
+                        int value = tempResult + inputCheeseBlocks[k];
+                        tempMax = Math.max(value, tempMax);
+                    }
+                    tempResult = Math.max(tempMax, tempResult);
+                    finalResult = Math.max(tempResult, finalResult);
+                    tempResult = inputCheeseBlocks[i];
                 }
-                result += lastEat;
             }
-            processCheese.add(cheeseBlock);
+        } else if (inputCheeseBlocks.length == 1) {
+            finalResult = inputCheeseBlocks[0];
         }
-        System.out.println(result);
+        System.out.println(finalResult);
     }
 }
